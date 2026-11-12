@@ -274,11 +274,15 @@ function ns.CreateActionButton(name, parent, size, getEntry, setEntry)
     local highlight = ns.Disc(button, "HIGHLIGHT", 1, 1, 1, 0.18, 0)
     highlight:SetBlendMode("ADD")
 
-    -- Un curseur plein, une case vide ou le mode Personnaliser : le toucher sert à ranger,
-    -- pas à lancer.
+    -- Une case vide ou le mode Personnaliser : le toucher sert à ranger, pas à lancer.
+    -- Un objet tenu au curseur ne range que là où ranger a un sens : pendant Personnaliser,
+    -- ou dans une case vide. Sinon le toucher lance le sort et l'objet reste au curseur -
+    -- mesuré sur l'iPhone, 2026-11-09 : ranger par mégarde un objet tenu par-dessus un sort
+    -- lancé.
     button:SetScript("PreClick", function(self)
         if InCombatLockdown() or self.swiped then return end
-        if ns.editing or ns.slotEditing or GetCursorInfo() or not self:GetEntry() then
+        local placing = GetCursorInfo() and (ns.editing or ns.slotEditing or not self:GetEntry())
+        if ns.editing or ns.slotEditing or placing or not self:GetEntry() then
             self:SetAttribute("type", nil)
             self.suppressed = true
         end

@@ -169,6 +169,9 @@ local function Build()
     defaults:SetPoint("LEFT", customize, "RIGHT", 10, 0)
     local close = ns.UIButton(panel, ns.T("Close"), 130, 44, function() panel:Hide() end)
     close:SetPoint("BOTTOMRIGHT", -LEFT, 16)
+    -- Fermer écrit ce qui attend : le jeu ne recharge l'interface pour un add-on que sur un
+    -- vrai toucher, jamais depuis une minuterie (mesuré sur l'iPhone, 2026-11-09).
+    if ns.SaveOver then ns.SaveOver(close, function() panel:Hide() end) end
 
     -- En mode Personnaliser : un seul bouton à l'écran pour en sortir.
     doneButton = ns.UIButton(UIParent, ns.T("Done"), 180, 44, function() ns.SetEditing(false) end)
@@ -176,6 +179,9 @@ local function Build()
     doneButton:SetPoint("TOP", UIParent, "TOP", 0, -60)
     doneButton.back:SetVertexColor(0.85, 0.68, 0.3, 0.95)
     doneButton:Hide()
+    -- Sortir de Personnaliser est un vrai toucher : c'est là que l'interface se recharge et
+    -- que le jeu écrit WolkaraRoueDB.
+    if ns.SaveOver then ns.SaveOver(doneButton, function() ns.SetEditing(false) end) end
 end
 
 function Settings:Init() Build() end

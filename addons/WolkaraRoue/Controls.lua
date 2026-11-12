@@ -211,6 +211,9 @@ local function Build()
     divider:SetPoint("TOP", 0, -46)
     local close = ns.UIButton(panel, "X", 34, 30, function() panel:Hide() end)
     close:SetPoint("TOPRIGHT", -12, -12)
+    -- Fermer écrit ce qui attend, sur le toucher lui-même (un /reload ne part pas d'une
+    -- minuterie : mesuré sur l'iPhone, 2026-11-09).
+    if ns.SaveOver then ns.SaveOver(close, function() panel:Hide() end) end
 
     General(Page("general", ns.T("General"), 1))
     Combat(Page("combat", ns.T("Combat"), 2))
@@ -223,6 +226,7 @@ local function Build()
     credits:SetTextColor(0.61, 0.57, 0.51)
     local done = ns.UIButton(panel, ns.T("Close"), 110, 34, function() panel:Hide() end)
     done:SetPoint("BOTTOMRIGHT", -20, 14)
+    if ns.SaveOver then ns.SaveOver(done, function() panel:Hide() end) end
     Show("general")
 end
 
