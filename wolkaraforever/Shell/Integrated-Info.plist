@@ -18,5 +18,9 @@
 	<string>Allow World of Warcraft in WolkaraForever to use the microphone for in-game voice chat.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Turn what you say into text in the game. Recognition runs on this iPad.</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.role-playing-games</string>
+	<key>LSSupportsGameMode</key>
+	<true/>
 </dict>
 </plist>
