@@ -205,4 +205,4 @@ local function Changed()
 end
 ns.On("SPELLS_CHANGED", Changed)
 ns.On("UPDATE_MACROS", Changed)
-ns.On("BAG_UPDATE", function() if ns.db then Wheels:Refresh() end end)
+ns.On("BAG_UPDATE", function() if ns.db and not (ns.Fan and ns.Fan:Enabled()) then Wheels:Refresh() end end)

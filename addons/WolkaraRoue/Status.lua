@@ -28,6 +28,14 @@ Status.Settings = function() return Settings() end
 
 local function Player() return _G.WolkaraMobilePlayer end
 
+local pending = {}
+local function Soon(key, fn)
+    if pending[key] then return end
+    if not (C_Timer and C_Timer.After) then fn(); return end
+    pending[key] = true
+    C_Timer.After(0.1, function() pending[key] = nil; fn() end)
+end
+
 local function Present(value)
     if issecretvalue and issecretvalue(value) then return true end
     return value ~= nil
@@ -281,7 +289,7 @@ function Status:Refresh()
     UpdateXP()
 end
 
-ns.On("UNIT_AURA", function(unit) if unit == "player" and ns.db then UpdateAuras() end end)
+ns.On("UNIT_AURA", function(unit) if unit == "player" and ns.db then Soon("player", UpdateAuras) end end)
 ns.On("PLAYER_XP_UPDATE", function() if ns.db then UpdateXP() end end)
 ns.On("UPDATE_EXHAUSTION", function() if ns.db then UpdateXP() end end)
 ns.On("PLAYER_LEVEL_UP", function() if ns.db then UpdateXP() end end)
@@ -517,6 +525,7 @@ local function RestyleTarget()
         auraRow:SetSize(380 - 62, DEBUFF_SIZE)
         auraRow:SetPoint("TOPLEFT", target, "BOTTOMLEFT", 62, -6)
         for _, aura in ipairs(target.auras or {}) do aura:SetParent(auraHider) end
+        target.aurasReplaced = true
         targetPortrait = CreateFrame("Frame", nil, target)
         targetPortrait:SetSize(52, 52)
         targetPortrait:SetPoint("LEFT", target, "LEFT", 3, 0)
@@ -572,7 +581,14 @@ local layoutWithTarget = Status.Layout
 function Status:Layout() layoutWithTarget(self); if not InCombatLockdown() or targetPortrait then RestyleTarget() end end
 ns.On("PLAYER_TARGET_CHANGED", function() if ns.db then RestyleTarget() end end)
 ns.On("UNIT_PORTRAIT_UPDATE", function(unit) if unit == "target" and ns.db then RestyleTarget() end end)
-ns.On("UNIT_HEALTH", function(unit) if unit == "target" and ns.db and targetPortrait then RestyleTarget() end end)
+ns.On("UNIT_HEALTH", function(unit)
+    if unit ~= "target" or not ns.db or not targetPortrait then return end
+    local target = Target()
+    if not (target and UnitExists and UnitExists("target")) then return end
+    busyTarget = true
+    BarText(target.health.text, UnitHealth("target"), UnitHealthMax("target"), true)
+    busyTarget = false
+end)
 
-ns.On("UNIT_AURA", function(unit) if unit == "target" and ns.db then UpdateTargetAuras() end end)
+ns.On("UNIT_AURA", function(unit) if unit == "target" and ns.db then Soon("target", UpdateTargetAuras) end end)
 ns.On("PLAYER_TARGET_CHANGED", function() if ns.db then UpdateTargetAuras() end end)

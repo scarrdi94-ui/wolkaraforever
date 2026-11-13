@@ -124,7 +124,7 @@ local function Unit(name, unit, width, default)
 end
 
 local function UpdateAuras(frame)
-    if frame.unit == "player" then return end
+    if frame.unit == "player" or frame.aurasReplaced then return end
     local shown = 0
     for _, filter in ipairs({ "HARMFUL", "HELPFUL" }) do
         local index = 1

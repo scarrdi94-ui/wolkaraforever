@@ -509,12 +509,20 @@ ticker:SetScript("OnUpdate", function(_, elapsed)
     end
 end)
 
+local pending = {}
+local function Soon(key, fn)
+    if pending[key] then return end
+    if not (C_Timer and C_Timer.After) then fn(); return end
+    pending[key] = true
+    C_Timer.After(0.1, function() pending[key] = nil; fn() end)
+end
+
 local function Cooldowns() if ns.db then Each(ns.UpdateCooldown) end end
 ns.On("SPELL_UPDATE_COOLDOWN", Cooldowns)
 ns.On("BAG_UPDATE_COOLDOWN", Cooldowns)
 ns.On("PLAYER_TARGET_CHANGED", Cooldowns)
-ns.On("UNIT_AURA", function(unit) if unit == "player" or unit == "target" then Cooldowns() end end)
-ns.On("BAG_UPDATE", function() if ns.db then Fan:Refresh() end end)
+ns.On("UNIT_AURA", function(unit) if unit == "player" or unit == "target" then Soon("cooldowns", Cooldowns) end end)
+ns.On("BAG_UPDATE", function() if ns.db then Soon("refresh", function() Fan:Refresh() end) end end)
 ns.On("SPELLS_CHANGED", function()
     if not ns.db then return end
     Fan:Refresh()

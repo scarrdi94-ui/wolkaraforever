@@ -129,7 +129,7 @@ local function UpdateCooldowns()
 end
 ns.On("SPELL_UPDATE_COOLDOWN", UpdateCooldowns)
 ns.On("BAG_UPDATE_COOLDOWN", UpdateCooldowns)
-ns.On("BAG_UPDATE", function() if ns.db then Free:Refresh() end end)
+ns.On("BAG_UPDATE", function() if ns.db and not (ns.Fan and ns.Fan:Enabled()) then Free:Refresh() end end)
 ns.On("SPELLS_CHANGED", function()
     if not ns.db then return end
     Free:Refresh()

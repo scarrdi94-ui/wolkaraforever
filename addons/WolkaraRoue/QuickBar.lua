@@ -234,9 +234,17 @@ ticker:SetScript("OnUpdate", function(_, elapsed)
     end
 end)
 
+local pending = {}
+local function Soon(key, fn)
+    if pending[key] then return end
+    if not (C_Timer and C_Timer.After) then fn(); return end
+    pending[key] = true
+    C_Timer.After(0.1, function() pending[key] = nil; fn() end)
+end
+
 ns.On("SPELL_UPDATE_COOLDOWN", function() if container and ns.db then Each(ns.UpdateCooldown) end end)
 ns.On("BAG_UPDATE_COOLDOWN", function() if container and ns.db then Each(ns.UpdateCooldown) end end)
-ns.On("BAG_UPDATE", function() if container and ns.db then Quick:Refresh() end end)
+ns.On("BAG_UPDATE", function() if container and ns.db then Soon("refresh", function() Quick:Refresh() end) end end)
 ns.On("PLAYER_REGEN_ENABLED", function()
     if not (ns.db and handle and type(ns.db.quick) == "table") then return end
     ns.db.quick.open = handle:GetAttribute("open") and true or false

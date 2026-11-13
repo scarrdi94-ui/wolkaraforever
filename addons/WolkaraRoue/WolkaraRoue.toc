@@ -2,7 +2,7 @@
 ## Title: Mobile Interface |cff66ccff(WolkaraForever)|r
 ## Notes: Spell wheels, free buttons, shortcuts, health bars and chat designed for touch.
 ## Author: scarrdi94, pookee (ExoGroupe)
-## Version: 1.0.5
+## Version: 1.0.6
 ## SavedVariablesPerCharacter: WolkaraRoueDB
 
 Core.lua
