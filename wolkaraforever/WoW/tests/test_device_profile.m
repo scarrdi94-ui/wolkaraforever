@@ -46,6 +46,8 @@ int main(void) {
                   [NSString stringWithFormat:@"%@ renders Performance at 0.75", profile.identifier]);
             Check([profile backingScaleForQuality:TKRenderQualityBalanced]==(profile.family==TKDeviceFamilyPhone?2.0:1.0),
                   [NSString stringWithFormat:@"%@ renders Balanced at 1.0", profile.identifier]);
+            Check([profile backingScaleForQuality:TKRenderQualityMedium]==(profile.family==TKDeviceFamilyPhone?1.5:0),
+                  [NSString stringWithFormat:@"%@ has Medium at 1.5 on a phone and not at all elsewhere", profile.identifier]);
             if (profile.highestQuality<TKRenderQualityQuality)
                 Check([profile backingScaleForQuality:TKRenderQualityQuality]==0,
                       [NSString stringWithFormat:@"%@ does not offer Quality (%@)", profile.identifier,
@@ -110,7 +112,7 @@ int main(void) {
         Check([automatic.identifier isEqual:stale.identifier], @"and no override means the running device");
 
         // --- the stored names round-trip, and an unknown one is not silently taken as real
-        for (NSNumber *quality in @[@(TKRenderQualityPerformance),@(TKRenderQualityBalanced),@(TKRenderQualityQuality)]) {
+        for (NSNumber *quality in @[@(TKRenderQualityPerformance),@(TKRenderQualityMedium),@(TKRenderQualityBalanced),@(TKRenderQualityQuality)]) {
             NSString *name=[TKDeviceProfile nameForQuality:quality.integerValue];
             Check([TKDeviceProfile qualityForName:name].integerValue==quality.integerValue,
                   [NSString stringWithFormat:@"%@ round-trips", name]);
@@ -135,6 +137,7 @@ int main(void) {
                 TKDeviceProfile *sized=[phone profileWithWidth:sizes[i][0] height:sizes[i][1]];
                 Check(sized.nativeWidth==sizes[i][0] && sized.nativeHeight==sizes[i][1],@"uses window geometry, including rotation/fold");
                 Check([sized backingScaleForQuality:TKRenderQualityBalanced]==2,@"balanced doubles both pixel dimensions");
+                Check([sized backingScaleForQuality:TKRenderQualityMedium]==1.5,@"medium sits between 1x and 2x");
                 Check(phone.nativeWidth==0 && phone.nativeHeight==0,@"does not mutate the shared catalogue");
             }
         }

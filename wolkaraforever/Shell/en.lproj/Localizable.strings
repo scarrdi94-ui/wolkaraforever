@@ -55,6 +55,7 @@
 "home.performance.renderProfile" = "Render profile: %@";
 "home.performance.deviceProfile" = "Device profile: %@";
 "home.render.performance" = "Performance";
+"home.render.medium" = "Medium";
 "home.render.balanced" = "Balanced";
 "home.render.quality" = "Quality";
 "home.diagnostics" = "Diagnostics and logs";

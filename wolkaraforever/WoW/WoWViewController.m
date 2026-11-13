@@ -1397,6 +1397,7 @@ static NSString *TKRenderSize(TKDeviceProfile *profile, TKRenderQuality quality)
 static NSString *TKRenderQualityName(TKRenderQuality quality) {
     switch (quality) {
         case TKRenderQualityPerformance: return WKLocalized(@"home.render.performance");
+        case TKRenderQualityMedium: return WKLocalized(@"home.render.medium");
         case TKRenderQualityQuality: return WKLocalized(@"home.render.quality");
         case TKRenderQualityBalanced: break;
     }
@@ -1531,7 +1532,7 @@ static NSString *TKRenderQualityTitle(TKDeviceProfile *profile, TKRenderQuality 
         message:WKLocalizedFormat(@"home.render.message",[self deviceProfileName])
         preferredStyle:UIAlertControllerStyleActionSheet];
     TKRenderQuality current=[self effectiveRenderQuality];
-    for (NSNumber *each in @[@(TKRenderQualityPerformance),@(TKRenderQualityBalanced),@(TKRenderQualityQuality)]) {
+    for (NSNumber *each in @[@(TKRenderQualityPerformance),@(TKRenderQualityMedium),@(TKRenderQualityBalanced),@(TKRenderQualityQuality)]) {
         TKRenderQuality quality=each.integerValue;
         // Never offer a quality this hardware has not been measured at. Hiding it is the honest
         // answer: a level that is offered and then cannot hold its frame budget is worse than

@@ -203,11 +203,13 @@
 
 - (CGFloat)backingScaleForQuality:(TKRenderQuality)quality {
     if (self.family==TKDeviceFamilyPhone)
-        return quality==TKRenderQualityPerformance ? 1.0 : quality==TKRenderQualityBalanced ? 2.0 : 0;
+        return quality==TKRenderQualityPerformance ? 1.0 : quality==TKRenderQualityMedium ? 1.5
+             : quality==TKRenderQualityBalanced ? 2.0 : 0;
 
     if (quality>TKRenderQualityBalanced && self.qualityBackingScale<=0) return 0;
     switch (quality) {
         case TKRenderQualityPerformance: return 0.75;
+        case TKRenderQualityMedium: return 0;
         case TKRenderQualityBalanced: return 1.0;
         case TKRenderQualityQuality: return self.qualityBackingScale;
     }
@@ -231,6 +233,7 @@
 + (NSString *)nameForQuality:(TKRenderQuality)quality {
     switch (quality) {
         case TKRenderQualityPerformance: return @"performance";
+        case TKRenderQualityMedium: return @"medium";
         case TKRenderQualityBalanced: return @"balanced";
         case TKRenderQualityQuality: return @"quality";
     }
@@ -238,7 +241,7 @@
 }
 
 + (NSNumber *)qualityForName:(NSString *)name {
-    for (NSNumber *each in @[@(TKRenderQualityPerformance),@(TKRenderQualityBalanced),@(TKRenderQualityQuality)])
+    for (NSNumber *each in @[@(TKRenderQualityPerformance),@(TKRenderQualityMedium),@(TKRenderQualityBalanced),@(TKRenderQualityQuality)])
         if ([[self nameForQuality:each.integerValue] isEqual:name]) return each;
     return nil;
 }

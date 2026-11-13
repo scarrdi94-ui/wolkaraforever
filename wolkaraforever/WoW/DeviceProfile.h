@@ -23,6 +23,8 @@ typedef NS_ENUM(NSInteger, TKDeviceFamily) {
 // independent settings.
 typedef NS_ENUM(NSInteger, TKRenderQuality) {
     TKRenderQualityPerformance,
+    // Phones only: between their 1x Performance and 2x Balanced. Never the default.
+    TKRenderQualityMedium,
     TKRenderQualityBalanced,
     TKRenderQualityQuality,
 };

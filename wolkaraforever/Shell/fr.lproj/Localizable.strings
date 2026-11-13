@@ -52,6 +52,7 @@
 "home.performance.renderProfile" = "Profil de rendu : %@";
 "home.performance.deviceProfile" = "Profil de l’appareil : %@";
 "home.render.performance" = "Performances";
+"home.render.medium" = "Moyen";
 "home.render.balanced" = "Équilibré";
 "home.render.quality" = "Qualité";
 "home.diagnostics" = "Diagnostics et journaux";
